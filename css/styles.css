@@ -435,11 +435,10 @@ body.nav-open {
   position: relative;
 }
 
+/* Index label sits above the frame (in the whitespace), never over the photo itself */
 .hero-split__index {
-  position: absolute;
-  top: 0;
-  left: -0.25rem;
-  z-index: 2;
+  display: block;
+  margin-bottom: var(--space-sm);
   font-family: var(--font-sans);
   font-size: 0.72rem;
   letter-spacing: var(--tracking-label);
