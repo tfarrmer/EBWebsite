@@ -502,6 +502,14 @@ body.nav-open {
   color: var(--color-placeholder-text);
 }
 
+/* Real photo dropped into a hero-split media frame (replaces .image-placeholder) */
+.hero-split__photo {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 15%;
+}
+
 /* ---------- Text link with arrow ---------- */
 .link-arrow {
   display: inline-flex;
