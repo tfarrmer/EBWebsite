@@ -238,7 +238,7 @@ button:focus-visible {
 .site-nav__list {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: clamp(1.25rem, 2.4vw, var(--space-lg));
 }
 
 .site-nav__list a {
@@ -264,6 +264,16 @@ button:focus-visible {
   width: 40px;
   height: 1px;
   background-color: var(--color-line-strong);
+}
+
+/* Decorative rule is dropped where the six nav items need the room */
+@media (min-width: 900px) and (max-width: 1099px) {
+  .site-nav__rule {
+    display: none;
+  }
+  .site-nav__meta {
+    margin-left: 0;
+  }
 }
 
 @media (min-width: 900px) {
@@ -315,6 +325,8 @@ button:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
+  padding-block: var(--header-height) calc(var(--space-xl) + 2rem);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
@@ -332,18 +344,29 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-lg);
+  gap: clamp(1.1rem, 4.5vh, var(--space-lg));
   text-align: center;
 }
 
 .nav-overlay__list a {
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 5vh, 2rem);
   letter-spacing: 0.03em;
+  color: var(--color-text-muted);
+  padding-bottom: 0.1em;
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.nav-overlay__list a:hover,
+.nav-overlay__list a:focus-visible {
+  color: var(--color-text);
 }
 
 .nav-overlay__list a[aria-current="page"] {
-  color: var(--color-text-muted);
+  color: var(--color-text);
+  font-style: italic;
+  border-bottom-color: var(--color-text);
 }
 
 .nav-overlay__meta {
@@ -553,6 +576,231 @@ body.nav-open {
 
 .section--bordered {
   border-top: 1px solid var(--color-line);
+}
+
+/* ---------- Page intro (pages without a hero-split) ---------- */
+.page-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.page-intro .hero-split__index {
+  margin-bottom: 0;
+}
+
+.page-intro__headline {
+  max-width: 18ch;
+}
+
+/* ---------- Portfolio gallery ---------- */
+.portfolio {
+  padding-block: var(--space-lg) var(--space-xl);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg) var(--space-md);
+  }
+}
+
+.gallery__link {
+  display: block;
+  overflow: hidden;
+  background-color: var(--color-bg-alt);
+}
+
+.gallery__link:focus-visible {
+  outline-offset: 3px;
+}
+
+/* Portrait crop anchored to the top so faces are never cut off */
+.gallery__img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 0;
+  transition: transform 0.6s ease, opacity 0.3s ease;
+}
+
+.gallery__link:hover .gallery__img,
+.gallery__link:focus-visible .gallery__img {
+  transform: scale(1.025);
+}
+
+.gallery__placeholder {
+  border-style: solid;
+}
+
+/* Fade in on scroll (class added by JS, so no-JS visitors see everything) */
+.gallery__item.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.gallery__item.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__item.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .gallery__img {
+    transition: none;
+  }
+}
+
+/* ---------- Lightbox ---------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  background-color: rgba(243, 237, 227, 0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox__stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem var(--container-pad) 3.5rem;
+}
+
+@media (min-width: 900px) {
+  .lightbox__stage {
+    padding-inline: 6rem;
+  }
+}
+
+.lightbox__figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.lightbox__img {
+  max-width: 100%;
+  max-height: calc(100vh - 10rem);
+  max-height: calc(100dvh - 10rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 18px 50px rgba(42, 37, 33, 0.14);
+}
+
+.lightbox__counter {
+  color: var(--color-text-muted);
+}
+
+.lightbox__btn {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--color-text);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.lightbox__btn:hover {
+  color: var(--color-text-muted);
+}
+
+.lightbox__close {
+  top: 1rem;
+  right: var(--container-pad);
+}
+
+.lightbox__icon {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.lightbox__prev,
+.lightbox__next {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 50%;
+  background-color: var(--color-bg);
+  font-size: 1.1rem;
+}
+
+.lightbox__prev:hover,
+.lightbox__next:hover {
+  border-color: var(--color-text);
+}
+
+.lightbox__prev {
+  left: 1rem;
+}
+
+.lightbox__next {
+  right: 1rem;
+}
+
+/* Small screens: arrows move below the image, beside the counter */
+@media (max-width: 639px) {
+  .lightbox__prev,
+  .lightbox__next {
+    top: auto;
+    bottom: 0.75rem;
+    transform: none;
+  }
+  .lightbox__prev {
+    left: var(--container-pad);
+  }
+  .lightbox__next {
+    right: var(--container-pad);
+  }
+}
+
+body.lightbox-open {
+  overflow: hidden;
 }
 
 /* ---------- Site Footer ---------- */
