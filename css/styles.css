@@ -527,9 +527,61 @@ body.nav-open {
 /* Real photo dropped into a hero-split media frame (replaces .image-placeholder) */
 .hero-split__photo {
   width: 100%;
+  height: auto;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: 50% 15%;
+}
+
+/* Crop anchored to the very top (portraits where the face sits high) */
+.hero-split__photo--top {
+  object-position: 50% 0;
+}
+
+/* About: long-form copy beside the portrait. Text starts at the top and
+   the portrait stays in view while the story scrolls on desktop. */
+.hero-split--about .hero-split__grid {
+  align-items: start;
+}
+
+.hero-split--about .hero-split__headline {
+  font-size: clamp(2.1rem, 3.4vw + 1rem, 3.6rem);
+  letter-spacing: 0.02em;
+  max-width: 13ch;
+}
+
+@media (min-width: 900px) {
+  .hero-split--about .hero-split__media {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-md));
+  }
+  .hero-split--about .hero-split__content {
+    padding-top: var(--space-md);
+  }
+}
+
+/* ---------- Pull quote ---------- */
+.pull-quote {
+  margin: var(--space-sm) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-line);
+  max-width: 34ch;
+}
+
+.pull-quote p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.35rem, 1.2vw + 1rem, 1.75rem);
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+/* Row of understated text links */
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  margin-top: var(--space-sm);
 }
 
 /* ---------- Text link with arrow ---------- */

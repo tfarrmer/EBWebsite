@@ -1,7 +1,8 @@
 """
 Build the portfolio gallery from the "portfolio photos" folder.
 
-  1. Copies every image in "portfolio photos/" (sorted by filename) into
+  1. Copies every image in "portfolio photos/" (sorted by filename, minus
+     anything listed in EXCLUDE) into
      images/portfolio/ as 01.jpg, 02.png, ... keeping each file's format.
      The originals are never modified, moved, or deleted.
   2. Writes web-optimized JPEG copies (max 1600px wide) to
@@ -30,6 +31,10 @@ WEB_DIR = os.path.join(OUT_DIR, "web")
 PAGE = os.path.join(ROOT, "pages", "portfolio.html")
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
+# Source photos used elsewhere on the site, kept out of the portfolio grid.
+EXCLUDE = {
+    "TheMuse.png",  # About page portrait (images/about/)
+}
 MAX_WEB_WIDTH = 1600
 PLACEHOLDER_COUNT = 9
 START_MARK = "<!-- portfolio:start -->"
@@ -48,6 +53,8 @@ def source_images():
     files = []
     for name in sorted(os.listdir(SOURCE_DIR)):
         path = os.path.join(SOURCE_DIR, name)
+        if name in EXCLUDE:
+            continue
         if os.path.isfile(path) and os.path.splitext(name)[1].lower() in IMAGE_EXTS:
             files.append(path)
     return files
@@ -104,7 +111,8 @@ def build_images(sources):
             size = image_size(original)
             rel = "../images/portfolio/" + stem + ext
 
-        items.append({"n": i, "src": rel, "size": size})
+        items.append({"n": i, "src": rel, "size": size,
+                      "file": stem + ext, "source": os.path.basename(src)})
     return items
 
 
@@ -120,6 +128,10 @@ def gallery_markup(items):
                 "</li>",
             ]
     else:
+        lines.append("<!-- File mapping (images/portfolio/ <- portfolio photos/):")
+        for item in items:
+            lines.append("     {} <- {}".format(item["file"], item["source"]))
+        lines.append("-->")
         for item in items:
             alt = html.escape("Makeup by Erika Elise, look {}".format(item["n"]))
             dims = ""
